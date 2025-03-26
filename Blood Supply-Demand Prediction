@@ -4,7 +4,7 @@
   "metadata": {
     "colab": {
       "provenance": [],
-      "authorship_tag": "ABX9TyODuNxX5w3kFegq7UuxF5tp",
+      "authorship_tag": "ABX9TyOWzo0C6K396Q8hwoB5u/ck",
       "include_colab_link": true
     },
     "kernelspec": {
@@ -96,7 +96,7 @@
       "metadata": {
         "colab": {
           "base_uri": "https://localhost:8080/",
-          "height": 512
+          "height": 530
         },
         "id": "WmxhM4oC148e",
         "outputId": "43ccd096-e937-4f00-89bc-ebbbddc4b5b4"
@@ -547,7 +547,7 @@
       "metadata": {
         "colab": {
           "base_uri": "https://localhost:8080/",
-          "height": 356
+          "height": 373
         },
         "id": "0GGwuNgo2ApY",
         "outputId": "9b4c3be0-109b-4d78-f686-1a3eba8cc22a"
@@ -2121,7 +2121,7 @@
       "metadata": {
         "colab": {
           "base_uri": "https://localhost:8080/",
-          "height": 129
+          "height": 149
         },
         "id": "Az_yyN8v2RCN",
         "outputId": "b2d4a3ea-6051-4163-aba9-8c20eb0b48c7"
@@ -2365,7 +2365,7 @@
       "metadata": {
         "colab": {
           "base_uri": "https://localhost:8080/",
-          "height": 129
+          "height": 149
         },
         "id": "3irnrZ0J2SuA",
         "outputId": "7f7f90cd-570b-44eb-cebd-b784fb7e3367"
@@ -2835,7 +2835,7 @@
       "metadata": {
         "colab": {
           "base_uri": "https://localhost:8080/",
-          "height": 562
+          "height": 427
         },
         "id": "yAP8s10c2YYU",
         "outputId": "675839ff-2d09-4a23-fc58-fb927aec32e6"
@@ -2884,7 +2884,7 @@
       "metadata": {
         "colab": {
           "base_uri": "https://localhost:8080/",
-          "height": 598
+          "height": 454
         },
         "id": "F3GiUt1i2azb",
         "outputId": "557578ac-2bd0-4c79-8903-a807458a1262"
@@ -3953,7 +3953,7 @@
       "metadata": {
         "colab": {
           "base_uri": "https://localhost:8080/",
-          "height": 318
+          "height": 355
         },
         "id": "MJSpbXsP3L4m",
         "outputId": "60b6d91b-a406-4bf8-b076-af08d402d9d8"
@@ -4751,422 +4751,6 @@
       "metadata": {
         "id": "Y6IWV4lp3Sly"
       }
-    },
-    {
-      "cell_type": "code",
-      "source": [
-        "import streamlit as st\n",
-        "import pandas as pd\n",
-        "import xgboost as xgb\n",
-        "import numpy as np\n",
-        "\n",
-        "# Load the trained XGBoost model (replace 'best_model.json' with your actual model file)\n",
-        "best_model = xgb.Booster()\n",
-        "best_model.load_model('best_model.json')\n",
-        "\n",
-        "# Load your preprocessed data (replace 'blood_type_distribution_by_country.csv' with your actual data file)\n",
-        "df = pd.read_csv('blood_type_distribution_by_country.csv', encoding='latin-1')\n",
-        "# Preprocess the data (apply the same preprocessing steps as you did before training)\n",
-        "\n",
-        "# ... (Your data preprocessing code here) ...\n",
-        "\n",
-        "# Define the Streamlit app\n",
-        "st.title(\"Blood Supply-Demand Prediction\")\n",
-        "\n",
-        "# Create input fields for user to enter features\n",
-        "population = st.number_input(\"Population\", value=1000000)\n",
-        "o_pos_proportion = st.number_input(\"O+ Proportion\", value=0.36, min_value=0.0, max_value=1.0)\n",
-        "a_pos_proportion = st.number_input(\"A+ Proportion\", value=0.34, min_value=0.0, max_value=1.0)\n",
-        "b_pos_proportion = st.number_input(\"B+ Proportion\", value=0.09, min_value=0.0, max_value=1.0)\n",
-        "ab_pos_proportion = st.number_input(\"AB+ Proportion\", value=0.03, min_value=0.0, max_value=1.0)\n",
-        "o_neg_proportion = st.number_input(\"O- Proportion\", value=0.07, min_value=0.0, max_value=1.0)\n",
-        "a_neg_proportion = st.number_input(\"A- Proportion\", value=0.06, min_value=0.0, max_value=1.0)\n",
-        "b_neg_proportion = st.number_input(\"B- Proportion\", value=0.02, min_value=0.0, max_value=1.0)\n",
-        "ab_neg_proportion = st.number_input(\"AB- Proportion\", value=0.01, min_value=0.0, max_value=1.0)\n",
-        "\n",
-        "# Create a button to trigger prediction\n",
-        "if st.button(\"Predict\"):\n",
-        "    # Create input data for the model\n",
-        "    input_data = pd.DataFrame(\n",
-        "        [[population, o_pos_proportion, a_pos_proportion, b_pos_proportion,\n",
-        "         ab_pos_proportion, o_neg_proportion, a_neg_proportion,\n",
-        "         b_neg_proportion, ab_neg_proportion]],\n",
-        "        columns=['Population', 'O+_Proportion', 'A+_Proportion', 'B+_Proportion',\n",
-        "                 'AB+_Proportion', 'O-_Proportion', 'A-_Proportion',\n",
-        "                 'B-_Proportion', 'AB-_Proportion']\n",
-        "    )\n",
-        "\n",
-        "    # Make prediction using the loaded model\n",
-        "    prediction = best_model.predict(xgb.DMatrix(input_data))\n",
-        "\n",
-        "    # Display the prediction\n",
-        "    st.success(f\"Predicted O+ Demand: {prediction[0]:.2f}\")"
-      ],
-      "metadata": {
-        "colab": {
-          "base_uri": "https://localhost:8080/",
-          "height": 384
-        },
-        "id": "fcopNOqV5SK-",
-        "outputId": "759a4ebc-17a1-4471-d9b6-1fd7ceda9c97"
-      },
-      "execution_count": 23,
-      "outputs": [
-        {
-          "output_type": "error",
-          "ename": "ModuleNotFoundError",
-          "evalue": "No module named 'streamlit'",
-          "traceback": [
-            "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
-            "\u001b[0;31mModuleNotFoundError\u001b[0m                       Traceback (most recent call last)",
-            "\u001b[0;32m<ipython-input-23-2ad4ce59a173>\u001b[0m in \u001b[0;36m<cell line: 0>\u001b[0;34m()\u001b[0m\n\u001b[0;32m----> 1\u001b[0;31m \u001b[0;32mimport\u001b[0m \u001b[0mstreamlit\u001b[0m \u001b[0;32mas\u001b[0m \u001b[0mst\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m      2\u001b[0m \u001b[0;32mimport\u001b[0m \u001b[0mpandas\u001b[0m \u001b[0;32mas\u001b[0m \u001b[0mpd\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      3\u001b[0m \u001b[0;32mimport\u001b[0m \u001b[0mxgboost\u001b[0m \u001b[0;32mas\u001b[0m \u001b[0mxgb\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      4\u001b[0m \u001b[0;32mimport\u001b[0m \u001b[0mnumpy\u001b[0m \u001b[0;32mas\u001b[0m \u001b[0mnp\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      5\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n",
-            "\u001b[0;31mModuleNotFoundError\u001b[0m: No module named 'streamlit'",
-            "",
-            "\u001b[0;31m---------------------------------------------------------------------------\u001b[0;32m\nNOTE: If your import is failing due to a missing package, you can\nmanually install dependencies using either !pip or !apt.\n\nTo view examples of installing some common dependencies, click the\n\"Open Examples\" button below.\n\u001b[0;31m---------------------------------------------------------------------------\u001b[0m\n"
-          ],
-          "errorDetails": {
-            "actions": [
-              {
-                "action": "open_url",
-                "actionText": "Open Examples",
-                "url": "/notebooks/snippets/importing_libraries.ipynb"
-              }
-            ]
-          }
-        }
-      ]
-    },
-    {
-      "cell_type": "code",
-      "source": [
-        "!pip install streamlit"
-      ],
-      "metadata": {
-        "colab": {
-          "base_uri": "https://localhost:8080/"
-        },
-        "id": "CuJHFZim5TkH",
-        "outputId": "4ee919a2-6385-4b2f-fda9-37d3dde5d118"
-      },
-      "execution_count": 24,
-      "outputs": [
-        {
-          "output_type": "stream",
-          "name": "stdout",
-          "text": [
-            "Collecting streamlit\n",
-            "  Downloading streamlit-1.44.0-py3-none-any.whl.metadata (8.9 kB)\n",
-            "Requirement already satisfied: altair<6,>=4.0 in /usr/local/lib/python3.11/dist-packages (from streamlit) (5.5.0)\n",
-            "Requirement already satisfied: blinker<2,>=1.0.0 in /usr/local/lib/python3.11/dist-packages (from streamlit) (1.9.0)\n",
-            "Requirement already satisfied: cachetools<6,>=4.0 in /usr/local/lib/python3.11/dist-packages (from streamlit) (5.5.2)\n",
-            "Requirement already satisfied: click<9,>=7.0 in /usr/local/lib/python3.11/dist-packages (from streamlit) (8.1.8)\n",
-            "Requirement already satisfied: numpy<3,>=1.23 in /usr/local/lib/python3.11/dist-packages (from streamlit) (2.0.2)\n",
-            "Requirement already satisfied: packaging<25,>=20 in /usr/local/lib/python3.11/dist-packages (from streamlit) (24.2)\n",
-            "Requirement already satisfied: pandas<3,>=1.4.0 in /usr/local/lib/python3.11/dist-packages (from streamlit) (2.2.2)\n",
-            "Requirement already satisfied: pillow<12,>=7.1.0 in /usr/local/lib/python3.11/dist-packages (from streamlit) (11.1.0)\n",
-            "Requirement already satisfied: protobuf<6,>=3.20 in /usr/local/lib/python3.11/dist-packages (from streamlit) (5.29.4)\n",
-            "Requirement already satisfied: pyarrow>=7.0 in /usr/local/lib/python3.11/dist-packages (from streamlit) (18.1.0)\n",
-            "Requirement already satisfied: requests<3,>=2.27 in /usr/local/lib/python3.11/dist-packages (from streamlit) (2.32.3)\n",
-            "Requirement already satisfied: tenacity<10,>=8.1.0 in /usr/local/lib/python3.11/dist-packages (from streamlit) (9.0.0)\n",
-            "Requirement already satisfied: toml<2,>=0.10.1 in /usr/local/lib/python3.11/dist-packages (from streamlit) (0.10.2)\n",
-            "Requirement already satisfied: typing-extensions<5,>=4.4.0 in /usr/local/lib/python3.11/dist-packages (from streamlit) (4.12.2)\n",
-            "Collecting watchdog<7,>=2.1.5 (from streamlit)\n",
-            "  Downloading watchdog-6.0.0-py3-none-manylinux2014_x86_64.whl.metadata (44 kB)\n",
-            "\u001b[2K     \u001b[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\u001b[0m \u001b[32m44.3/44.3 kB\u001b[0m \u001b[31m2.4 MB/s\u001b[0m eta \u001b[36m0:00:00\u001b[0m\n",
-            "\u001b[?25hRequirement already satisfied: gitpython!=3.1.19,<4,>=3.0.7 in /usr/local/lib/python3.11/dist-packages (from streamlit) (3.1.44)\n",
-            "Collecting pydeck<1,>=0.8.0b4 (from streamlit)\n",
-            "  Downloading pydeck-0.9.1-py2.py3-none-any.whl.metadata (4.1 kB)\n",
-            "Requirement already satisfied: tornado<7,>=6.0.3 in /usr/local/lib/python3.11/dist-packages (from streamlit) (6.4.2)\n",
-            "Requirement already satisfied: jinja2 in /usr/local/lib/python3.11/dist-packages (from altair<6,>=4.0->streamlit) (3.1.6)\n",
-            "Requirement already satisfied: jsonschema>=3.0 in /usr/local/lib/python3.11/dist-packages (from altair<6,>=4.0->streamlit) (4.23.0)\n",
-            "Requirement already satisfied: narwhals>=1.14.2 in /usr/local/lib/python3.11/dist-packages (from altair<6,>=4.0->streamlit) (1.31.0)\n",
-            "Requirement already satisfied: gitdb<5,>=4.0.1 in /usr/local/lib/python3.11/dist-packages (from gitpython!=3.1.19,<4,>=3.0.7->streamlit) (4.0.12)\n",
-            "Requirement already satisfied: python-dateutil>=2.8.2 in /usr/local/lib/python3.11/dist-packages (from pandas<3,>=1.4.0->streamlit) (2.8.2)\n",
-            "Requirement already satisfied: pytz>=2020.1 in /usr/local/lib/python3.11/dist-packages (from pandas<3,>=1.4.0->streamlit) (2025.1)\n",
-            "Requirement already satisfied: tzdata>=2022.7 in /usr/local/lib/python3.11/dist-packages (from pandas<3,>=1.4.0->streamlit) (2025.1)\n",
-            "Requirement already satisfied: charset-normalizer<4,>=2 in /usr/local/lib/python3.11/dist-packages (from requests<3,>=2.27->streamlit) (3.4.1)\n",
-            "Requirement already satisfied: idna<4,>=2.5 in /usr/local/lib/python3.11/dist-packages (from requests<3,>=2.27->streamlit) (3.10)\n",
-            "Requirement already satisfied: urllib3<3,>=1.21.1 in /usr/local/lib/python3.11/dist-packages (from requests<3,>=2.27->streamlit) (2.3.0)\n",
-            "Requirement already satisfied: certifi>=2017.4.17 in /usr/local/lib/python3.11/dist-packages (from requests<3,>=2.27->streamlit) (2025.1.31)\n",
-            "Requirement already satisfied: smmap<6,>=3.0.1 in /usr/local/lib/python3.11/dist-packages (from gitdb<5,>=4.0.1->gitpython!=3.1.19,<4,>=3.0.7->streamlit) (5.0.2)\n",
-            "Requirement already satisfied: MarkupSafe>=2.0 in /usr/local/lib/python3.11/dist-packages (from jinja2->altair<6,>=4.0->streamlit) (3.0.2)\n",
-            "Requirement already satisfied: attrs>=22.2.0 in /usr/local/lib/python3.11/dist-packages (from jsonschema>=3.0->altair<6,>=4.0->streamlit) (25.3.0)\n",
-            "Requirement already satisfied: jsonschema-specifications>=2023.03.6 in /usr/local/lib/python3.11/dist-packages (from jsonschema>=3.0->altair<6,>=4.0->streamlit) (2024.10.1)\n",
-            "Requirement already satisfied: referencing>=0.28.4 in /usr/local/lib/python3.11/dist-packages (from jsonschema>=3.0->altair<6,>=4.0->streamlit) (0.36.2)\n",
-            "Requirement already satisfied: rpds-py>=0.7.1 in /usr/local/lib/python3.11/dist-packages (from jsonschema>=3.0->altair<6,>=4.0->streamlit) (0.23.1)\n",
-            "Requirement already satisfied: six>=1.5 in /usr/local/lib/python3.11/dist-packages (from python-dateutil>=2.8.2->pandas<3,>=1.4.0->streamlit) (1.17.0)\n",
-            "Downloading streamlit-1.44.0-py3-none-any.whl (9.8 MB)\n",
-            "\u001b[2K   \u001b[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\u001b[0m \u001b[32m9.8/9.8 MB\u001b[0m \u001b[31m40.9 MB/s\u001b[0m eta \u001b[36m0:00:00\u001b[0m\n",
-            "\u001b[?25hDownloading pydeck-0.9.1-py2.py3-none-any.whl (6.9 MB)\n",
-            "\u001b[2K   \u001b[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\u001b[0m \u001b[32m6.9/6.9 MB\u001b[0m \u001b[31m41.7 MB/s\u001b[0m eta \u001b[36m0:00:00\u001b[0m\n",
-            "\u001b[?25hDownloading watchdog-6.0.0-py3-none-manylinux2014_x86_64.whl (79 kB)\n",
-            "\u001b[2K   \u001b[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\u001b[0m \u001b[32m79.1/79.1 kB\u001b[0m \u001b[31m5.2 MB/s\u001b[0m eta \u001b[36m0:00:00\u001b[0m\n",
-            "\u001b[?25hInstalling collected packages: watchdog, pydeck, streamlit\n",
-            "Successfully installed pydeck-0.9.1 streamlit-1.44.0 watchdog-6.0.0\n"
-          ]
-        }
-      ]
-    },
-    {
-      "cell_type": "code",
-      "source": [
-        "import streamlit as st\n",
-        "import pandas as pd\n",
-        "import xgboost as xgb\n",
-        "import numpy as np\n",
-        "\n",
-        "# Load the trained XGBoost model (replace 'best_model.json' with your actual model file)\n",
-        "best_model = xgb.Booster()\n",
-        "best_model.load_model('best_model.json')\n",
-        "\n",
-        "# Load your preprocessed data (replace 'blood_type_distribution_by_country.csv' with your actual data file)\n",
-        "df = pd.read_csv('blood_type_distribution_by_country.csv', encoding='latin-1')\n",
-        "# Preprocess the data (apply the same preprocessing steps as you did before training)\n",
-        "\n",
-        "# ... (Your data preprocessing code here) ...\n",
-        "\n",
-        "# Define the Streamlit app\n",
-        "st.title(\"Blood Supply-Demand Prediction\")\n",
-        "\n",
-        "# Create input fields for user to enter features\n",
-        "population = st.number_input(\"Population\", value=1000000)\n",
-        "o_pos_proportion = st.number_input(\"O+ Proportion\", value=0.36, min_value=0.0, max_value=1.0)\n",
-        "a_pos_proportion = st.number_input(\"A+ Proportion\", value=0.34, min_value=0.0, max_value=1.0)\n",
-        "b_pos_proportion = st.number_input(\"B+ Proportion\", value=0.09, min_value=0.0, max_value=1.0)\n",
-        "ab_pos_proportion = st.number_input(\"AB+ Proportion\", value=0.03, min_value=0.0, max_value=1.0)\n",
-        "o_neg_proportion = st.number_input(\"O- Proportion\", value=0.07, min_value=0.0, max_value=1.0)\n",
-        "a_neg_proportion = st.number_input(\"A- Proportion\", value=0.06, min_value=0.0, max_value=1.0)\n",
-        "b_neg_proportion = st.number_input(\"B- Proportion\", value=0.02, min_value=0.0, max_value=1.0)\n",
-        "ab_neg_proportion = st.number_input(\"AB- Proportion\", value=0.01, min_value=0.0, max_value=1.0)\n",
-        "\n",
-        "# Create a button to trigger prediction\n",
-        "if st.button(\"Predict\"):\n",
-        "    # Create input data for the model\n",
-        "    input_data = pd.DataFrame(\n",
-        "        [[population, o_pos_proportion, a_pos_proportion, b_pos_proportion,\n",
-        "         ab_pos_proportion, o_neg_proportion, a_neg_proportion,\n",
-        "         b_neg_proportion, ab_neg_proportion]],\n",
-        "        columns=['Population', 'O+_Proportion', 'A+_Proportion', 'B+_Proportion',\n",
-        "                 'AB+_Proportion', 'O-_Proportion', 'A-_Proportion',\n",
-        "                 'B-_Proportion', 'AB-_Proportion']\n",
-        "    )\n",
-        "\n",
-        "    # Make prediction using the loaded model\n",
-        "    prediction = best_model.predict(xgb.DMatrix(input_data))\n",
-        "\n",
-        "    # Display the prediction\n",
-        "    st.success(f\"Predicted O+ Demand: {prediction[0]:.2f}\")"
-      ],
-      "metadata": {
-        "colab": {
-          "base_uri": "https://localhost:8080/",
-          "height": 547
-        },
-        "id": "O3cRdCE65bZX",
-        "outputId": "ab0c4f26-060d-46a9-87c8-d123f03326d7"
-      },
-      "execution_count": 25,
-      "outputs": [
-        {
-          "output_type": "error",
-          "ename": "XGBoostError",
-          "evalue": "[00:40:45] /workspace/src/common/io.cc:147: Opening best_model.json failed: No such file or directory\nStack trace:\n  [bt] (0) /usr/local/lib/python3.11/dist-packages/xgboost/lib/libxgboost.so(+0x25c1ac) [0x784624a5c1ac]\n  [bt] (1) /usr/local/lib/python3.11/dist-packages/xgboost/lib/libxgboost.so(+0x332083) [0x784624b32083]\n  [bt] (2) /usr/local/lib/python3.11/dist-packages/xgboost/lib/libxgboost.so(+0x16b4d7) [0x78462496b4d7]\n  [bt] (3) /usr/local/lib/python3.11/dist-packages/xgboost/lib/libxgboost.so(XGBoosterLoadModel+0xc3) [0x78462496b773]\n  [bt] (4) /lib/x86_64-linux-gnu/libffi.so.8(+0x7e2e) [0x7846a4de9e2e]\n  [bt] (5) /lib/x86_64-linux-gnu/libffi.so.8(+0x4493) [0x7846a4de6493]\n  [bt] (6) /usr/lib/python3.11/lib-dynload/_ctypes.cpython-311-x86_64-linux-gnu.so(+0xa4d8) [0x7846a504a4d8]\n  [bt] (7) /usr/lib/python3.11/lib-dynload/_ctypes.cpython-311-x86_64-linux-gnu.so(+0x9c8e) [0x7846a5049c8e]\n  [bt] (8) /usr/bin/python3(_PyObject_MakeTpCall+0x27c) [0x52f67c]\n\n",
-          "traceback": [
-            "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
-            "\u001b[0;31mXGBoostError\u001b[0m                              Traceback (most recent call last)",
-            "\u001b[0;32m<ipython-input-25-2ad4ce59a173>\u001b[0m in \u001b[0;36m<cell line: 0>\u001b[0;34m()\u001b[0m\n\u001b[1;32m      6\u001b[0m \u001b[0;31m# Load the trained XGBoost model (replace 'best_model.json' with your actual model file)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      7\u001b[0m \u001b[0mbest_model\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mxgb\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mBooster\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m----> 8\u001b[0;31m \u001b[0mbest_model\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mload_model\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m'best_model.json'\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m      9\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m     10\u001b[0m \u001b[0;31m# Load your preprocessed data (replace 'blood_type_distribution_by_country.csv' with your actual data file)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
-            "\u001b[0;32m/usr/local/lib/python3.11/dist-packages/xgboost/core.py\u001b[0m in \u001b[0;36mload_model\u001b[0;34m(self, fname)\u001b[0m\n\u001b[1;32m   2695\u001b[0m             \u001b[0;31m# from URL.\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   2696\u001b[0m             \u001b[0mfname\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mos\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mfspath\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mos\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mpath\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mexpanduser\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mfname\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m-> 2697\u001b[0;31m             \u001b[0m_check_call\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0m_LIB\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mXGBoosterLoadModel\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mhandle\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mc_str\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mfname\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m   2698\u001b[0m         \u001b[0;32melif\u001b[0m \u001b[0misinstance\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mfname\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mbytearray\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   2699\u001b[0m             \u001b[0mbuf\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mfname\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
-            "\u001b[0;32m/usr/local/lib/python3.11/dist-packages/xgboost/core.py\u001b[0m in \u001b[0;36m_check_call\u001b[0;34m(ret)\u001b[0m\n\u001b[1;32m    282\u001b[0m     \"\"\"\n\u001b[1;32m    283\u001b[0m     \u001b[0;32mif\u001b[0m \u001b[0mret\u001b[0m \u001b[0;34m!=\u001b[0m \u001b[0;36m0\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 284\u001b[0;31m         \u001b[0;32mraise\u001b[0m \u001b[0mXGBoostError\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mpy_str\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0m_LIB\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mXGBGetLastError\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    285\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    286\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n",
-            "\u001b[0;31mXGBoostError\u001b[0m: [00:40:45] /workspace/src/common/io.cc:147: Opening best_model.json failed: No such file or directory\nStack trace:\n  [bt] (0) /usr/local/lib/python3.11/dist-packages/xgboost/lib/libxgboost.so(+0x25c1ac) [0x784624a5c1ac]\n  [bt] (1) /usr/local/lib/python3.11/dist-packages/xgboost/lib/libxgboost.so(+0x332083) [0x784624b32083]\n  [bt] (2) /usr/local/lib/python3.11/dist-packages/xgboost/lib/libxgboost.so(+0x16b4d7) [0x78462496b4d7]\n  [bt] (3) /usr/local/lib/python3.11/dist-packages/xgboost/lib/libxgboost.so(XGBoosterLoadModel+0xc3) [0x78462496b773]\n  [bt] (4) /lib/x86_64-linux-gnu/libffi.so.8(+0x7e2e) [0x7846a4de9e2e]\n  [bt] (5) /lib/x86_64-linux-gnu/libffi.so.8(+0x4493) [0x7846a4de6493]\n  [bt] (6) /usr/lib/python3.11/lib-dynload/_ctypes.cpython-311-x86_64-linux-gnu.so(+0xa4d8) [0x7846a504a4d8]\n  [bt] (7) /usr/lib/python3.11/lib-dynload/_ctypes.cpython-311-x86_64-linux-gnu.so(+0x9c8e) [0x7846a5049c8e]\n  [bt] (8) /usr/bin/python3(_PyObject_MakeTpCall+0x27c) [0x52f67c]\n\n"
-          ]
-        }
-      ]
-    },
-    {
-      "cell_type": "code",
-      "source": [
-        "# prompt: i want to visualise the model in streamlit\n",
-        "\n",
-        "import streamlit as st\n",
-        "import pandas as pd\n",
-        "import xgboost as xgb\n",
-        "\n",
-        "# Assuming you have your trained XGBoost model loaded as 'best_model'\n",
-        "# and your preprocessed DataFrame as 'df'\n",
-        "\n",
-        "# ... (Your model loading and data loading code here) ...\n",
-        "\n",
-        "# Define the Streamlit app\n",
-        "st.title(\"Blood Supply-Demand Prediction\")\n",
-        "\n",
-        "# Create input fields for user to enter features\n",
-        "population = st.number_input(\"Population\", value=1000000)\n",
-        "o_pos_proportion = st.number_input(\"O+ Proportion\", value=0.36, min_value=0.0, max_value=1.0)\n",
-        "a_pos_proportion = st.number_input(\"A+ Proportion\", value=0.34, min_value=0.0, max_value=1.0)\n",
-        "b_pos_proportion = st.number_input(\"B+ Proportion\", value=0.09, min_value=0.0, max_value=1.0)\n",
-        "ab_pos_proportion = st.number_input(\"AB+ Proportion\", value=0.03, min_value=0.0, max_value=1.0)\n",
-        "o_neg_proportion = st.number_input(\"O- Proportion\", value=0.07, min_value=0.0, max_value=1.0)\n",
-        "a_neg_proportion = st.number_input(\"A- Proportion\", value=0.06, min_value=0.0, max_value=1.0)\n",
-        "b_neg_proportion = st.number_input(\"B- Proportion\", value=0.02, min_value=0.0, max_value=1.0)\n",
-        "ab_neg_proportion = st.number_input(\"AB- Proportion\", value=0.01, min_value=0.0, max_value=1.0)\n",
-        "\n",
-        "# Create a button to trigger prediction\n",
-        "if st.button(\"Predict\"):\n",
-        "    # Create input data for the model\n",
-        "    input_data = pd.DataFrame(\n",
-        "        [[population, o_pos_proportion, a_pos_proportion, b_pos_proportion,\n",
-        "         ab_pos_proportion, o_neg_proportion, a_neg_proportion,\n",
-        "         b_neg_proportion, ab_neg_proportion]],\n",
-        "        columns=['Population', 'O+_Proportion', 'A+_Proportion', 'B+_Proportion',\n",
-        "                 'AB+_Proportion', 'O-_Proportion', 'A-_Proportion',\n",
-        "                 'B-_Proportion', 'AB-_Proportion']\n",
-        "    )\n",
-        "\n",
-        "    # Make prediction using the loaded model\n",
-        "    prediction = best_model.predict(xgb.DMatrix(input_data))\n",
-        "\n",
-        "    # Display the prediction\n",
-        "    st.success(f\"Predicted O+ Demand: {prediction[0]:.2f}\")\n"
-      ],
-      "metadata": {
-        "colab": {
-          "base_uri": "https://localhost:8080/"
-        },
-        "id": "4w0XBfiq5gzn",
-        "outputId": "940c0a62-4f69-4b50-c42b-d9b869632727"
-      },
-      "execution_count": 26,
-      "outputs": [
-        {
-          "output_type": "stream",
-          "name": "stderr",
-          "text": [
-            "2025-03-26 00:41:46.720 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.812 \n",
-            "  \u001b[33m\u001b[1mWarning:\u001b[0m to view this Streamlit app on a browser, run it with the following\n",
-            "  command:\n",
-            "\n",
-            "    streamlit run /usr/local/lib/python3.11/dist-packages/colab_kernel_launcher.py [ARGUMENTS]\n",
-            "2025-03-26 00:41:46.813 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.816 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.818 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.819 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.820 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.821 Session state does not function when running a script without `streamlit run`\n",
-            "2025-03-26 00:41:46.822 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.824 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.825 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.826 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.827 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.828 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.829 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.830 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.831 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.832 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.833 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.833 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.834 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.835 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.836 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.837 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.838 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.839 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.839 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.840 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.841 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.842 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.842 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.843 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.844 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.845 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.846 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.847 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.848 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.848 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.849 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.850 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.851 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.852 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.852 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.853 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.854 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.855 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.855 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.856 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.857 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.857 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.858 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.859 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.860 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.860 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.861 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.861 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.862 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.863 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.864 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.865 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.865 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.870 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-03-26 00:41:46.871 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n"
-          ]
-        }
-      ]
-    },
-    {
-      "cell_type": "code",
-      "source": [
-        "# prompt: NameError: name 'best_model' is not defined\n",
-        "# Traceback:\n",
-        "# File \"streamlit/runtime/scriptrunner/exec_code.py\", line 88, in exec_func_with_error_handling\n",
-        "# File \"streamlit/runtime/scriptrunner/script_runner.py\", line 588, in code_to_exec\n",
-        "# File \"/home/pyodide/blank.py\", line 39, in <module>\n",
-        "#     prediction = best_model.predict(xgb.DMatrix(input_data))\n",
-        "#                  ^^^^^^^^^^\n",
-        "\n",
-        "# Assuming you have your trained XGBoost model loaded as 'best_model'\n",
-        "# and your preprocessed DataFrame as 'df'\n",
-        "\n",
-        "# ... (Your model loading and data loading code here) ...\n",
-        "\n",
-        "# Define the Streamlit app\n",
-        "st.title(\"Blood Supply-Demand Prediction\")\n",
-        "\n",
-        "# Create input fields for user to enter features\n",
-        "population = st.number_input(\"Population\", value=1000000)\n",
-        "o_pos_proportion = st.number_input(\"O+ Proportion\", value=0.36, min_value=0.0, max_value=1.0)\n",
-        "a_pos_proportion = st.number_input(\"A+ Proportion\", value=0.34, min_value=0.0, max_value=1.0)\n",
-        "b_pos_proportion = st.number_input(\"B+ Proportion\", value=0.09, min_value=0.0, max_value=1.0)\n",
-        "ab_pos_proportion = st.number_input(\"AB+ Proportion\", value=0.03, min_value=0.0, max_value=1.0)\n",
-        "o_neg_proportion = st.number_input(\"O- Proportion\", value=0.07, min_value=0.0, max_value=1.0)\n",
-        "a_neg_proportion = st.number_input(\"A- Proportion\", value=0.06, min_value=0.0, max_value=1.0)\n",
-        "b_neg_proportion = st.number_input(\"B- Proportion\", value=0.02, min_value=0.0, max_value=1.0)\n",
-        "ab_neg_proportion = st.number_input(\"AB- Proportion\", value=0.01, min_value=0.0, max_value=1.0)\n",
-        "\n",
-        "# Create a button to trigger prediction\n",
-        "if st.button(\"Predict\"):\n",
-        "    # Create input data for the model\n",
-        "    input_data = pd.DataFrame(\n",
-        "        [[population, o_pos_proportion, a_pos_proportion, b_pos_proportion,\n",
-        "         ab_pos_proportion, o_neg_proportion, a_neg_proportion,\n",
-        "         b_neg_proportion, ab_neg_proportion]],\n",
-        "        columns=['Population', 'O+_Proportion', 'A+_Proportion', 'B+_Proportion',\n",
-        "                 'AB+_Proportion', 'O-_Proportion', 'A-_Proportion',\n",
-        "                 'B-_Proportion', 'AB-_Proportion']\n",
-        "    )\n",
-        "\n",
-        "    # Make prediction using the loaded model\n",
-        "    if 'best_model' in locals():\n",
-        "        prediction = best_model.predict(xgb.DMatrix(input_data))\n",
-        "        # Display the prediction\n",
-        "        st.success(f\"Predicted O+ Demand: {prediction[0]:.2f}\")\n",
-        "    else:\n",
-        "        st.error(\"Please train or load a model before making predictions.\")\n"
-      ],
-      "metadata": {
-        "id": "3bcdGADN6ppt"
-      },
-      "execution_count": null,
-      "outputs": []
     }
   ]
 }
